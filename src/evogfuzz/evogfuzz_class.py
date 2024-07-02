@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, List, Union, Set, Tuple, Sequence, Optional
+from typing import Callable, List, Union, Set, Tuple, Sequence, Optional, Dict
 from pathlib import Path
 from random import choice
 import numpy as np
@@ -283,7 +283,8 @@ class EvoGFuzz(EvoGFrame):
     This is the classic EvoGFuzz - the original grammar-based fuzzer!
     """
 
-    def fuzz(self) -> Set[Input]:
+    def fuzz(self) -> Dict[int, set]:
+        dict = {}
         if self.logging:
             logging.info("Fuzzing with EvoGFuzz")
         new_population: Set[Input] = self._setup()
@@ -292,11 +293,12 @@ class EvoGFuzz(EvoGFrame):
             if self.logging:
                 logging.info(f"Starting iteration {self._iteration}")
             new_population = self._loop(new_population)
+            dict[self._iteration] = self.get_found_exceptions_inputs()
             self._iteration = self._iteration + 1
 
         self._finalize()
 
-        return self.get_found_exceptions_inputs()
+        return dict
 
 
 class EvoGGen(EvoGFrame):

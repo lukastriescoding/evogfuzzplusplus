@@ -1,4 +1,5 @@
 import math
+import sys
 
 from debugging_framework.input.oracle import OracleResult
 
@@ -118,9 +119,13 @@ def eval_fitness(eval_iterations, initial_inputs, iterations, grammar):
 
 
 def main(eval_iterations, initial_inputs, iterations, grammar):
+    input = sys.argv[1]
+    filename = "results" + input + ".txt"
+    print(filename)
     dict_stand, dict_naive, dict_impr, dict_soph, dict_ratio_soph, dict_diff_exp = eval_fitness(eval_iterations, initial_inputs, iterations, grammar)
 
-    with open("results.txt", "w") as file:
+
+    with open(filename, "w") as file:
         write_total_found_exc(file, dict_stand, iterations, "standard")
         write_output(file, dict_stand, "standard")
 

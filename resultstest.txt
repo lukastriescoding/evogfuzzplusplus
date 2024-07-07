@@ -1,0 +1,78 @@
+EvoGFuzz found 184 bug-triggering inputs with the standard fitness function!standard
+0 : 0
+1 : 0
+2 : 0
+3 : 0
+4 : 9
+5 : 25
+6 : 60
+7 : 110
+8 : 171
+9 : 184
+
+
+EvoGFuzz found 307 bug-triggering inputs with the naive fitness function!naive
+0 : 0
+1 : 0
+2 : 0
+3 : 37
+4 : 51
+5 : 56
+6 : 65
+7 : 129
+8 : 223
+9 : 307
+
+
+EvoGFuzz found 0 bug-triggering inputs with the improved fitness function!improved
+0 : 0
+1 : 0
+2 : 0
+3 : 0
+4 : 0
+5 : 0
+6 : 0
+7 : 0
+8 : 0
+9 : 0
+
+
+EvoGFuzz found 241 bug-triggering inputs with the sophisticated fitness function!sophisticated
+0 : 0
+1 : 28
+2 : 90
+3 : 169
+4 : 169
+5 : 169
+6 : 169
+7 : 180
+8 : 186
+9 : 241
+
+
+EvoGFuzz found 459 bug-triggering inputs with the ratioed sophisticated fitness function!ratioed sophisticated
+0 : 0
+1 : 25
+2 : 86
+3 : 171
+4 : 263
+5 : 312
+6 : 361
+7 : 404
+8 : 420
+9 : 459
+
+
+EvoGFuzz found 15 bug-triggering inputs with the different expansions fitness function!different expansions
+0 : 0
+1 : 0
+2 : 0
+3 : 0
+4 : 0
+5 : 0
+6 : 0
+7 : 0
+8 : 7
+9 : 15
+
+

@@ -4,7 +4,7 @@ def write_total_found_exc(file, dict_found_exc_inp, iterations, fitness):
 
 
 def write_output(file, dict_found_exc_inp, fitness):
-    file.write(fitness + "\n")
+    #file.write(fitness + "\n")
     for iteration in dict_found_exc_inp.keys():
-        file.write(f"{iteration} : {dict_found_exc_inp[iteration]}\n")
-    file.write("\n\n")
+        file.write(f"{dict_found_exc_inp[iteration]}\n")
+    file.write("\n")

@@ -1,21 +1,30 @@
 def get_lists(l: str, iterations: int, filename: str):
-    lines = []
     with open(filename, 'r') as file:
         lines = file.readlines()
-        
+
     if iterations > 9 or iterations < 0:
         return None
-    
-    stan = lines[iterations][1:-1].split(', ')
-    if l == 'naive':
-        return stan, lines[iterations+11][1:-1].split(', ')
+
+    our_list = []
+
+    if l == 'stand':
+        our_list = lines[iterations][1:-2].split(', ')
+    elif l == 'naive':
+        our_list = lines[iterations + 11][1:-2].split(', ')
     elif l == 'impr':
-        return stan, lines[iterations+22][1:-1].split(', ')
+        our_list = lines[iterations + 22][1:-2].split(', ')
     elif l == 'soph':
-        return stan, lines[iterations+33][1:-1].split(', ')
+        our_list = lines[iterations + 33][1:-2].split(', ')
     elif l == 'ratio_soph':
-        return stan, lines[iterations+44][1:-1].split(', ')
+        our_list = lines[iterations + 44][1:-2].split(', ')
     elif l == 'diff_exp':
-        return stan, lines[iterations+55][1:-1].split(', ')
+        our_list = lines[iterations + 55][1:-2].split(', ')
     else:
         return None
+
+    our_list_int = []
+
+    for stri in our_list:
+        our_list_int.append(int(stri))
+
+    return our_list_int

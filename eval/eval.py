@@ -3,7 +3,7 @@ import sys
 
 from debugging_framework.input.oracle import OracleResult
 
-from grammars import CALC_GRAMMAR, EXPR_GRAMMAR, COMPL_CALC_GRAMMAR
+from grammars import CALC_GRAMMAR, EXPR_GRAMMAR, COMPL_CALC_GRAMMAR, PROGRAMM
 
 from output_writer import write_output, write_total_found_exc
 
@@ -121,38 +121,24 @@ def eval_fitness(eval_iterations, initial_inputs, iterations, grammar):
 def main(eval_iterations, initial_inputs, iterations, grammar):
     input = sys.argv[1]
     filename = "results" + input + ".txt"
-    print(filename)
+
     dict_stand, dict_naive, dict_impr, dict_soph, dict_ratio_soph, dict_diff_exp = eval_fitness(eval_iterations, initial_inputs, iterations, grammar)
 
-
     with open(filename, "w") as file:
-        #write_total_found_exc(file, dict_stand, iterations, "standard")
-        write_output(file, dict_stand, "standard")
-
-        #write_total_found_exc(file, dict_naive, iterations, "naive")
-        write_output(file, dict_naive, "naive")
-
-        #write_total_found_exc(file, dict_impr, iterations, "improved")
-        write_output(file, dict_impr, "improved")
-
-        #write_total_found_exc(file, dict_soph, iterations, "sophisticated")
-        write_output(file, dict_soph, "sophisticated")
-
-        #write_total_found_exc(file, dict_ratio_soph, iterations, "ratioed sophisticated")
-        write_output(file, dict_ratio_soph, "ratioed sophisticated")
-
-        #write_total_found_exc(file, dict_diff_exp, iterations, "different expansions")
-        write_output(file, dict_diff_exp, "different expansions")
+        write_output(file, dict_stand)
+        write_output(file, dict_naive)
+        write_output(file, dict_impr)
+        write_output(file, dict_soph)
+        write_output(file, dict_ratio_soph)
+        write_output(file, dict_diff_exp)
 
 
 if __name__ == "__main__":
-    eval_iterations = 5
-    initial_inputs = ['sqrt(1)', 'cos(912)', 'tan(4)']
+    eval_iterations = 1
+    # initial_inputs = ['sqrt(1)', 'cos(912)', 'tan(4)'] #CALC_GRAMMAR, COMPL_CALCGRAMMAR
+    # initial_inputs = ['2 + 2', '-6 / 9', '-(23 * 7)'] #EXPR_GRAMMAR
+    initial_inputs = [] #PROGRAMM
     iterations = 10
-    grammar = CALC_GRAMMAR
+    grammar = PROGRAMM
 
     main(eval_iterations, initial_inputs, iterations, grammar)
-
-
-
-

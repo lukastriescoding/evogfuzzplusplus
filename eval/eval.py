@@ -1,38 +1,23 @@
-import math
 import sys
 
-from debugging_framework.input.oracle import OracleResult
-
-from grammars import CALC_GRAMMAR, EXPR_GRAMMAR, COMPL_CALC_GRAMMAR, PROGRAMM
-
-from output_writer import write_output, write_total_found_exc
+from preprocess import programs, oracle, CALC_GRAMMAR, EXPR_GRAMMAR, COMPL_CALC_GRAMMAR, PYSNOOPER_2, PYSNOOPER_3, COOKIECUTTER_2, COOKIECUTTER_3, COOKIECUTTER_4
 
 from evogfuzz.evogfuzz_class import EvoGFuzz
 from evogfuzz.fitness_functions import naive_fitness_function, improved_fitness_function, sophisticated_fitness_function, ratio_sophisticated_fitness_function, diff_expansions_fitness_function
 
 
-def calculator(inp: str) -> float:
-    return eval(
-        str(inp), {"sqrt": math.sqrt, "sin": math.sin, "cos": math.cos, "tan": math.tan}
-    )
+def write_output(file, dict_found_exc_inp):
+    for iteration in dict_found_exc_inp.keys():
+        file.write(f"{dict_found_exc_inp[iteration]}\n")
+    file.write("\n")
 
 
-def oracle(inp: str):
-    try:
-        calculator(inp)
-    except Exception as exc:
-        return OracleResult.FAILING
-
-    return OracleResult.PASSING
-
-
-
-def eval_fitness(eval_iterations, initial_inputs, iterations, grammar):
+def eval_fitness(trials, grammar, oracle, initial_inputs, iterations):
     """
-    Evaluate the differnet fitness functions.
-    :param eval_iterations: The number of iterations we use to calculate the found exception inputs.
+    Evaluate the different fitness functions.
+    :param trials: The number of iterations we use to calculate the found exception inputs.
     :param initial_inputs: The input from which EvoGFuzz starts to train.
-    :param itarations: The number of iterations EvoGFuzz trains.
+    :param iterations: The number of iterations EvoGFuzz trains.
     :return: The total number of found exception inputs per iteration.
     """
 
@@ -43,102 +28,101 @@ def eval_fitness(eval_iterations, initial_inputs, iterations, grammar):
     dict_ratio_soph = {i: [] for i in range(iterations)}
     dict_diff_exp = {i: [] for i in range(iterations)}
 
-    for i in range(eval_iterations):
+    dicts_list = []
+
+    for i in range(trials):
         epp_stand = EvoGFuzz(
-            grammar=grammar,
-            oracle=oracle,
-            inputs=initial_inputs,
-            iterations=iterations
+            grammar=grammar, oracle=oracle, inputs=initial_inputs, iterations=iterations
         )
 
         epp_naive = EvoGFuzz(
-            grammar=grammar,
-            oracle=oracle,
-            inputs=initial_inputs,
-            fitness_function=naive_fitness_function,
-            iterations=iterations
+            grammar=grammar, oracle=oracle, inputs=initial_inputs, iterations=iterations,
+            fitness_function=naive_fitness_function
         )
 
         epp_impr = EvoGFuzz(
-            grammar=grammar,
-            oracle=oracle,
-            inputs=initial_inputs,
-            fitness_function=improved_fitness_function,
-            iterations=iterations
+            grammar=grammar, oracle=oracle, inputs=initial_inputs, iterations=iterations,
+            fitness_function=improved_fitness_function
         )
 
         epp_soph = EvoGFuzz(
-            grammar=grammar,
-            oracle=oracle,
-            inputs=initial_inputs,
-            fitness_function=sophisticated_fitness_function,
-            iterations=iterations
+            grammar=grammar, oracle=oracle, inputs=initial_inputs, iterations=iterations,
+            fitness_function=sophisticated_fitness_function
         )
 
         epp_ratio_soph = EvoGFuzz(
-            grammar=grammar,
-            oracle=oracle,
-            inputs=initial_inputs,
-            fitness_function=ratio_sophisticated_fitness_function,
-            iterations=iterations
+            grammar=grammar, oracle=oracle, inputs=initial_inputs, iterations=iterations,
+            fitness_function=ratio_sophisticated_fitness_function
         )
 
         epp_diff_exp = EvoGFuzz(
-            grammar=grammar,
-            oracle=oracle,
-            inputs=initial_inputs,
-            fitness_function=diff_expansions_fitness_function,
-            iterations=iterations
+            grammar=grammar, oracle=oracle, inputs=initial_inputs, iterations=iterations,
+            fitness_function=diff_expansions_fitness_function
         )
 
         found_exc_inp_stand = epp_stand.fuzz()
         for iteration in found_exc_inp_stand.keys():
             dict_stand[iteration] += [len(found_exc_inp_stand[iteration])]
+        dicts_list.append(dict_stand)
 
         found_exc_inp_naive = epp_naive.fuzz()
         for iteration in found_exc_inp_naive.keys():
             dict_naive[iteration] += [len(found_exc_inp_naive[iteration])]
+        dicts_list.append(dict_naive)
 
         found_exc_inp_impr = epp_impr.fuzz()
         for iteration in found_exc_inp_impr.keys():
             dict_impr[iteration] += [len(found_exc_inp_impr[iteration])]
+        dicts_list.append(dict_impr)
 
         found_exc_inp_soph = epp_soph.fuzz()
         for iteration in found_exc_inp_soph.keys():
             dict_soph[iteration] += [len(found_exc_inp_soph[iteration])]
+        dicts_list.append(dict_soph)
 
         found_exc_inp_ratio_soph = epp_ratio_soph.fuzz()
         for iteration in found_exc_inp_ratio_soph.keys():
             dict_ratio_soph[iteration] += [len(found_exc_inp_ratio_soph[iteration])]
+        dicts_list.append(dict_ratio_soph)
 
         found_exc_inp_diff_exp = epp_diff_exp.fuzz()
         for iteration in found_exc_inp_diff_exp.keys():
             dict_diff_exp[iteration] += [len(found_exc_inp_diff_exp[iteration])]
+        dicts_list.append(dict_diff_exp)
 
-    return dict_stand, dict_naive, dict_impr, dict_soph, dict_ratio_soph, dict_diff_exp
+    return dicts_list
 
 
-def main(eval_iterations, initial_inputs, iterations, grammar):
+def main(eval_iterations, grammar, oracle, initial_inputs, iterations):
     input = sys.argv[1]
-    filename = "results" + input + ".txt"
+    filename = "results_" + input + ".txt"
 
-    dict_stand, dict_naive, dict_impr, dict_soph, dict_ratio_soph, dict_diff_exp = eval_fitness(eval_iterations, initial_inputs, iterations, grammar)
+    dicts_list = eval_fitness(eval_iterations, grammar, oracle, initial_inputs, iterations)
 
     with open(filename, "w") as file:
-        write_output(file, dict_stand)
-        write_output(file, dict_naive)
-        write_output(file, dict_impr)
-        write_output(file, dict_soph)
-        write_output(file, dict_ratio_soph)
-        write_output(file, dict_diff_exp)
+        write_output(file, dicts_list[0])
+        write_output(file, dicts_list[1])
+        write_output(file, dicts_list[2])
+        write_output(file, dicts_list[3])
+        write_output(file, dicts_list[4])
+        write_output(file, dicts_list[5])
 
 
 if __name__ == "__main__":
-    eval_iterations = 1
-    # initial_inputs = ['sqrt(1)', 'cos(912)', 'tan(4)'] #CALC_GRAMMAR, COMPL_CALCGRAMMAR
-    # initial_inputs = ['2 + 2', '-6 / 9', '-(23 * 7)'] #EXPR_GRAMMAR
-    initial_inputs = [] #PROGRAMM
-    iterations = 10
-    grammar = PROGRAMM
+    grammars = {'PYSNOOPER_2': [PYSNOOPER_2, programs[0].get_oracle(), programs[0].get_initial_inputs()],
+                'PYSNOOPER_3': [PYSNOOPER_3, programs[1].get_oracle(), programs[1].get_initial_inputs()],
+                'COOKIECUTTER_2': [COOKIECUTTER_2, programs[2].get_oracle(), programs[2].get_initial_inputs()],
+                'COOKIECUTTER_3': [COOKIECUTTER_3, programs[3].get_oracle(), programs[3].get_initial_inputs()],
+                'COOKIECUTTER_4': [COOKIECUTTER_4, programs[4].get_oracle(), programs[4].get_initial_inputs()],
+                'CALC_GRAMMAR': [CALC_GRAMMAR, oracle, ['sqrt(1)', 'cos(912)', 'tan(4)']],
+                'EXPR_GRAMMAR': [EXPR_GRAMMAR, oracle, ['2 + 2', '-6 / 9', '-(23 * 7)']],
+                'COMPL_CALC_GRAMMAR': [COMPL_CALC_GRAMMAR, oracle, ['sqrt(1)', 'cos(912)', 'tan(4)']]}
 
-    main(eval_iterations, initial_inputs, iterations, grammar)
+    eval_iterations = 1
+    chosen_grammar = 'PYSNOOPER_2'
+    grammar = grammars[chosen_grammar][0]
+    oracle = grammars[chosen_grammar][1]
+    initial_inputs = grammars[chosen_grammar][2]
+    iterations = 10
+
+    main(eval_iterations, grammar, oracle, initial_inputs, iterations)

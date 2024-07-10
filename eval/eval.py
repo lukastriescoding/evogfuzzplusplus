@@ -93,11 +93,11 @@ def eval_fitness(trials, grammar, oracle, initial_inputs, iterations):
     return dicts_list
 
 
-def main(eval_iterations, grammar, oracle, initial_inputs, iterations):
+def main(trials, grammar, oracle, initial_inputs, iterations):
     input = sys.argv[1]
     filename = "results_" + input + ".txt"
 
-    dicts_list = eval_fitness(eval_iterations, grammar, oracle, initial_inputs, iterations)
+    dicts_list = eval_fitness(trials, grammar, oracle, initial_inputs, iterations)
 
     with open(filename, "w") as file:
         write_output(file, dicts_list[0])
@@ -118,11 +118,11 @@ if __name__ == "__main__":
                 'EXPR_GRAMMAR': [EXPR_GRAMMAR, oracle, ['2 + 2', '-6 / 9', '-(23 * 7)']],
                 'COMPL_CALC_GRAMMAR': [COMPL_CALC_GRAMMAR, oracle, ['sqrt(1)', 'cos(912)', 'tan(4)']]}
 
-    eval_iterations = 1
+    trials = 30
     chosen_grammar = 'PYSNOOPER_2'
     grammar = grammars[chosen_grammar][0]
     oracle = grammars[chosen_grammar][1]
     initial_inputs = grammars[chosen_grammar][2]
     iterations = 10
 
-    main(eval_iterations, grammar, oracle, initial_inputs, iterations)
+    main(trials, grammar, oracle, initial_inputs, iterations)

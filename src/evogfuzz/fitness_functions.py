@@ -1,7 +1,6 @@
 from debugging_framework.input.oracle import OracleResult
 
 from evogfuzz.input import Input
-
 from evogfuzz.helper_functions import calculate_height_and_degrees, count_expansions, get_diff_expansions
 
 
@@ -43,7 +42,10 @@ def improved_fitness_function(test_input: Input) -> float:
     _, children = test_input.tree
     number_expansions = count_expansions(children)
     lam = 100
-    score_structure = (number_expansions ** 2) / (lam * len(str(test_input)))
+    if len(str(test_input)) == 0:
+        score_structure = 0
+    else:
+        score_structure = (number_expansions ** 2) / (lam * len(str(test_input)))
     if test_input.oracle == OracleResult.FAILING:
         score_feedback = 100
     else:
@@ -74,7 +76,10 @@ def ratio_sophisticated_fitness_function(test_input: Input) -> float:
     """
     lam = 2 ** 50
     height, degrees = calculate_height_and_degrees([test_input.tree], 0)
-    score_structure = degrees / (lam * height)
+    if height == 0:
+        score_structure = 0
+    else:
+        score_structure = degrees / (lam * height)
     if test_input.oracle == OracleResult.FAILING:
         score_feedback = 100
     else:

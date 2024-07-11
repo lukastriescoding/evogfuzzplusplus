@@ -26,15 +26,15 @@ def main():
         p_val_ratio_soph = mannwhitneyu_test(diff_exp, ratio_soph)
 
         cur_fitfunc = diff_exp
-        if p_val_naive < 0.05:
+        if p_val_naive <= 0.05:
             if sum(cur_fitfunc) < sum(naive):
-                p_val_naive = '\color{red}$\ding{55}$\color{black}' #cross
+                p_val_naive = '\color{red}$\ding{55}$\color{black}'  #cross
             else:
-                p_val_naive = '\color{red}$\ding{51}$\color{black}' #checkmark
+                p_val_naive = '\color{red}$\ding{51}$\color{black}'  #checkmark
         else:
             p_val_naive = round(p_val_naive, 2)
 
-        if p_val_impr < 0.05:
+        if p_val_impr <= 0.05:
             if sum(cur_fitfunc) < sum(impr):
                 p_val_impr = '\color{red}$\ding{55}$\color{black}'  # cross
             else:
@@ -42,7 +42,7 @@ def main():
         else:
             p_val_impr = round(p_val_impr, 2)
 
-        if p_val_soph < 0.05:
+        if p_val_soph <= 0.05:
             if sum(cur_fitfunc) < sum(soph):
                 p_val_soph = '\color{red}$\ding{55}$\color{black}'  # cross
             else:
@@ -50,7 +50,7 @@ def main():
         else:
             p_val_soph = round(p_val_soph, 2)
 
-        if p_val_stand < 0.05:
+        if p_val_stand <= 0.05:
             if sum(cur_fitfunc) < sum(stand):
                 p_val_stand = '\color{red}$\ding{55}$\color{black}'  # cross
             else:
@@ -58,7 +58,7 @@ def main():
         else:
             p_val_stand = round(p_val_stand, 2)
 
-        if p_val_ratio_soph < 0.05:
+        if p_val_ratio_soph <= 0.05:
             if sum(cur_fitfunc) < sum(ratio_soph):
                 p_val_ratio_soph = '\color{red}$\ding{55}$\color{black}'  # cross
             else:

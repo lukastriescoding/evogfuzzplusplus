@@ -1,24 +1,24 @@
-def get_lists(l: str, iteration: int, filename: str):
+def get_lists(fitfunc: str, iteration: int, filename: str):
     with open(filename, 'r') as file:
         lines = file.readlines()
 
-    if l == 'stand':
+    if fitfunc == 'stand':
         our_list = lines[iteration][1:-2].split(', ')
-    elif l == 'naive':
+    elif fitfunc == 'naive':
         our_list = lines[iteration + 11][1:-2].split(', ')
-    elif l == 'impr':
+    elif fitfunc == 'impr':
         our_list = lines[iteration + 22][1:-2].split(', ')
-    elif l == 'soph':
+    elif fitfunc == 'soph':
         our_list = lines[iteration + 33][1:-2].split(', ')
-    elif l == 'ratio_soph':
+    elif fitfunc == 'ratio_soph':
         our_list = lines[iteration + 44][1:-2].split(', ')
-    elif l == 'diff_exp':
+    elif fitfunc == 'diff_exp':
         our_list = lines[iteration + 55][1:-2].split(', ')
     else:
-        return None
+        raise Exception("fitness_function not found")
 
     our_list_int = []
-    for stri in our_list:
-        our_list_int.append(int(stri))
+    for value in our_list:
+        our_list_int.append(int(value))
 
     return our_list_int
